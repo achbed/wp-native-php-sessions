@@ -117,7 +117,7 @@ class Pantheon_Sessions {
 		// An empty string is used here to disable the cache limiter.
 		ini_set( 'session.cache_limiter', '' );
 		// Use httponly session cookies. Limits use by JavaScripts
-		ini_set( 'session.cookie_httponly', '1' );
+		//ini_set( 'session.cookie_httponly', '1' );
 
 	}
 
