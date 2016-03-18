@@ -12,9 +12,9 @@ Domain Path: /languages
 
 require_once( 'plugin-update-checker-2.2/plugin-update-checker.php' );
 $WSBoom_UpdateChecker = PucFactory::buildUpdateChecker(
-  'http://updates.whiteboardlabs.com/wp/?action=get_metadata&slug=pantheon-sessions',
+  'http://updates.whiteboardlabs.com/wp/?action=get_metadata&slug=wp-native-php-sessions',
   __FILE__,
-  'pantheon-sessions'
+  'wp-native-php-sessions'
 );
 
 class Pantheon_Sessions {
