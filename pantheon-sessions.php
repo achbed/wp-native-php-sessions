@@ -1,14 +1,21 @@
 <?php
 /*
 Plugin Name: Native PHP Sessions for WordPress
-Version: 0.5
-Description: Offload PHP's native sessions to your database for multi-server compatibility.
-Author: Pantheon
+Version: 0.5.1
+Description: CUSTOM FORK: Offload PHP's native sessions to your database for multi-server compatibility.
+Author: Pantheon / SHR
 Author URI: https://www.pantheon.io/
 Plugin URI: https://www.pantheon.io/
 Text Domain: pantheon-sessions
 Domain Path: /languages
 */
+
+require_once( 'plugin-update-checker-2.2/plugin-update-checker.php' );
+$WSBoom_UpdateChecker = PucFactory::buildUpdateChecker(
+  'http://updates.whiteboardlabs.com/wp/?action=get_metadata&slug=pantheon-sessions',
+  __FILE__,
+  'pantheon-sessions'
+);
 
 class Pantheon_Sessions {
 
