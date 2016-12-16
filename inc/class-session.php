@@ -54,9 +54,12 @@ class Session {
 	 * @param bool $secure
 	 * @return true|false
 	 */
-	public static function sid_exists( $sid, $secure = false ) {
+	public static function sid_exists( $sid, $secure = null ) {
 		global $wpdb;
 		$column_name = 'session_id';
+		if ( is_null( $secure ) ) {
+			$secure = is_ssl();
+		}
 		if( $secure ) {
 			$column_name = 'secure_session_id';
 		}

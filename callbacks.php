@@ -28,7 +28,7 @@ function _pantheon_session_open() {
 		$hasher = new PasswordHash( 8, false );
 		do {
 			$sid = md5( $hasher->get_random_bytes( 32 ) );
-		} while( \Pantheon_Sessions\Session::sid_exists( $sid ) );
+		} while( \Pantheon_Sessions\Session::sid_exists( $sid, false ) );
 		session_id( $sid );
 		if ( is_ssl() ) {
 			$insecure_session_name = substr( session_name(), 1 );
