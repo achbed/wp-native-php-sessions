@@ -55,27 +55,36 @@ class CLI_Command extends \WP_CLI_Command {
 	 */
 	public function delete( $args, $assoc_args ) {
 		global $wpdb;
+		$args = array();
 
 		if ( ! PANTHEON_SESSIONS_ENABLED ) {
 			WP_CLI::error( "Pantheon Sessions is currently disabled." );
-			return;
+		}
+
+		if ( isset( $assoc_args['date'] ) ) {
+			$date = strtotime( $assoc_args['date'] );
+			if ( $date === -1 ) {
+				if ( ( PHP_MAJOR_VERSION < 5 ) ||
+				     ( ( PHP_MAJOR_VERSION == 5 ) && ( PHP_MINOR_VERSION < 1 ) ) ) {
+					// Do this to find pre-5.1.0 invalid date response
+					$date = false;
+				}
+			}
+			if ( $date === false ) {
+				WP_CLI::warning( "Invalid date specified." );
+			} else {
+				$date = date( 'Y-m-d H:i:s', $date );
+				$args = $wpdb->get_col( "SELECT session_id FROM {$wpdb->pantheon_sessions} WHERE `datetime` < '{$date}'" );
+				if ( empty( $args ) ) {
+					WP_CLI::warning( "No sessions to delete." );
+				}
+			}
 		}
 
 		if ( isset( $assoc_args['all'] ) ) {
 			$args = $wpdb->get_col( "SELECT session_id FROM {$wpdb->pantheon_sessions}" );
 			if ( empty( $args ) ) {
 				WP_CLI::warning( "No sessions to delete." );
-				return;
-			}
-		}
-		
-		if ( isset( $assoc_args['date'] ) ) {
-			$from = strtotime( $assoc_args['date'] );
-			$from = date( 'Y-m-d H:i:s', $from );
-			$args = $wpdb->get_col( "SELECT session_id FROM {$wpdb->pantheon_sessions} WHERE `datetime` < '{$from}'" );
-			if ( empty( $args ) ) {
-				WP_CLI::warning( "No sessions to delete." );
-				return;
 			}
 		}
 
