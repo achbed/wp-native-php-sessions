@@ -45,6 +45,9 @@ class CLI_Command extends \WP_CLI_Command {
 	 * [<session-id>...]
 	 * : One or more session IDs
 	 *
+	 * [--date=<date>]
+	 * : Delete all sessions before <date>
+	 *
 	 * [--all]
 	 * : Delete all sessions.
 	 *
@@ -55,12 +58,24 @@ class CLI_Command extends \WP_CLI_Command {
 
 		if ( ! PANTHEON_SESSIONS_ENABLED ) {
 			WP_CLI::error( "Pantheon Sessions is currently disabled." );
+			return;
 		}
 
 		if ( isset( $assoc_args['all'] ) ) {
 			$args = $wpdb->get_col( "SELECT session_id FROM {$wpdb->pantheon_sessions}" );
 			if ( empty( $args ) ) {
 				WP_CLI::warning( "No sessions to delete." );
+				return;
+			}
+		}
+		
+		if ( isset( $assoc_args['date'] ) ) {
+			$from = strtotime( $assoc_args['date'] );
+			$from = date( 'Y-m-d H:i:s', $from );
+			$args = $wpdb->get_col( "SELECT session_id FROM {$wpdb->pantheon_sessions} WHERE `datetime` < '{$from}'" );
+			if ( empty( $args ) ) {
+				WP_CLI::warning( "No sessions to delete." );
+				return;
 			}
 		}
 
